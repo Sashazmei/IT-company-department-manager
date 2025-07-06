@@ -1,0 +1,138 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Завдання</title>
+    {% bootstrap_css %}
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(270deg, #e0eafc, #cfdef3);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .task-list-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffffdd;
+            backdrop-filter: blur(6px);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #343a40;
+        }
+
+        .btn-main {
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .task-meta {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 3px;
+        }
+
+        .btn-sm {
+            min-width: 110px;
+        }
+
+        form.logout-form {
+            margin-top: 30px;
+        }
+
+        .no-tasks {
+            text-align: center;
+            color: #6c757d;
+            padding: 30px 0;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="task-list-container">
+    <h2>Ваші завдання</h2>
+
+    <a href="{% url 'create_task' %}" class="btn btn-success btn-main">Створити нове завдання</a>
+
+    {% if tasks %}
+        {% for task in tasks %}
+            <div class="task-item">
+                <div>
+                    <div class="task-title">{{ task.title }}</div>
+                    <div class="task-meta">
+                        Створив: <strong>{{ task.creator.username }}</strong> |
+                        Дедлайн: {{ task.deadline|date:"d.m.Y" }}
+                        {% if task.is_completed %}
+                            | <span class="badge bg-success">Виконано</span>
+                        {% endif %}
+                    </div>
+                    {% if task.assignee %}
+                        <div class="task-meta">Виконує: <strong>{{ task.assignee.username }}</strong></div>
+                    {% else %}
+                        <div class="task-meta text-warning"><em>Задача вільна</em></div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    {% if not task.assignee %}
+                        <a href="{% url 'take_task' task.id %}" class="btn btn-primary btn-sm">Взяти</a>
+                    {% elif task.assignee == user %}
+                        <button class="btn btn-secondary btn-sm" disabled>Взято</button>
+                        <a href="{% url 'release_task' task.id %}" class="btn btn-warning btn-sm mt-1">Відпустити</a>
+                    {% else %}
+                        <button class="btn btn-secondary btn-sm" disabled>Зайнято</button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-tasks">Завдань поки немає</div>
+    {% endif %}
+
+    <!-- Форма выхода -->
+    <form method="post" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-secondary w-100">Вийти</button>
+    </form>
+</div>
+
+{% bootstrap_javascript jquery='full' %}
+</body>
+</html>

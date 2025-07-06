@@ -1,0 +1,124 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вхід до акаунта</title>
+    {% bootstrap_css %}
+    <style>
+        body, html {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeInUp 1s ease forwards;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a3f8f;
+            font-weight: 700;
+        }
+        .form-control {
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            transition: box-shadow 0.3s ease;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 10px #764ba2;
+            border-color: #764ba2;
+            outline: none;
+        }
+        .btn-login {
+            border-radius: 50px;
+            padding: 12px 0;
+            font-weight: 600;
+            background: #764ba2;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: 1.2rem;
+            transition: background 0.3s ease;
+        }
+        .btn-login:hover {
+            background: #5a3580;
+        }
+        .register-link {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .register-link a {
+            color: #764ba2;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .register-link a:hover {
+            color: #5a3580;
+        }
+
+        /* Анимация */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Плавное появление для ошибок */
+        .errorlist {
+            color: #d6336c;
+            font-weight: 600;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease forwards;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container shadow-lg">
+    <h2>Увійдіть у свій акаунт</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="mb-3">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {{ form.password.errors }}
+        </div>
+        <button type="submit" class="btn btn-login">Увійти</button>
+    </form>
+    <div class="register-link">
+        Ще немає акаунта? <a href="{% url 'register' %}">Зареєструватися</a>
+    </div>
+</div>
+
+{% bootstrap_javascript jquery='full' %}
+</body>
+</html>
