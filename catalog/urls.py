@@ -1,12 +1,18 @@
 from django.urls import path
-from . import views
+from .views import (
+    HomeRedirectView,
+    RegisterView,
+    TaskListView,
+    TaskCreateView,
+    take_task,
+    release_task,
+)
 
 urlpatterns = [
-    path('', views.home_redirect, name='home_redirect'),
-    path('register/', views.register_view, name='register'),
-    path('tasks/', views.task_list, name='task_list'),
-    path('tasks/create/', views.create_task, name='create_task'),
-    path('tasks/take/<int:task_id>/', views.take_task, name='take_task'),
-    path('tasks/release/<int:task_id>/', views.release_task, name='release_task'),
-
+    path('', HomeRedirectView.as_view(), name='home_redirect'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('tasks/', TaskListView.as_view(), name='task_list'),
+    path('tasks/create/', TaskCreateView.as_view(), name='create_task'),
+    path('tasks/take/<int:task_id>/', take_task, name='take_task'),
+    path('tasks/release/<int:task_id>/', release_task, name='release_task'),
 ]
