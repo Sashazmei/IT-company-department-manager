@@ -31,6 +31,10 @@ class TaskListView(LoginRequiredMixin, ListView):
     template_name = 'tasks/task_list.html'
     context_object_name = 'tasks'
 
+    def get_queryset(self):
+        user = self.request.user
+        return Task.objects.filter(creator=user) | Task.objects.filter(assignee=user)
+
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
