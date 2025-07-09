@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
-    'bootstrap4'
+    'bootstrap4',
+    'django_extensions',
 ]
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = 'task_list'

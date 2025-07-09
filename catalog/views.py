@@ -6,6 +6,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, FormView
+from django.http import HttpResponseRedirect
 
 from .models import Task
 from .forms import TaskForm
@@ -47,19 +48,19 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-@login_required
-def take_task(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
-    if task.assignee is None:
-        task.assignee = request.user
-        task.save()
-    return redirect('task_list')
+class TakeTaskView(LoginRequiredMixin, View):
+    def post(self, request, task_id):
+        task = get_object_or_404(Task, pk=task_id)
+        if task.assignee is None:
+            task.assignee = request.user
+            task.save()
+        return HttpResponseRedirect(reverse_lazy('task_list'))
 
 
-@login_required
-def release_task(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
-    if task.assignee == request.user:
-        task.assignee = None
-        task.save()
-    return redirect('task_list')
+class ReleaseTaskView(LoginRequiredMixin, View):
+    def post(self, request, task_id):
+        task = get_object_or_404(Task, pk=task_id)
+        if task.assignee == request.user:
+            task.assignee = None
+            task.save()
+        return HttpResponseRedirect(reverse_lazy('task_list'))
