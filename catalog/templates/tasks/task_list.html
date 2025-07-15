@@ -112,7 +112,10 @@
 
                 <div>
                     {% if not task.assignee %}
-                        <a href="{% url 'take_task' task.id %}" class="btn btn-primary btn-sm">Взяти</a>
+                        <form action="{% url 'take_task' task.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-sm">Взяти</button>
+                        </form>
                     {% elif task.assignee == user %}
                         <button class="btn btn-secondary btn-sm" disabled>Взято</button>
                         <form action="{% url 'release_task' task.id %}" method="post" style="display:inline;">
@@ -129,7 +132,7 @@
         <div class="no-tasks">Завдань поки немає</div>
     {% endif %}
 
-    <!-- Форма выхода -->
+    <!-- Форма виходу -->
     <form method="post" action="{% url 'logout' %}" class="logout-form">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-secondary w-100">Вийти</button>
